@@ -8,7 +8,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @app.route("/generate", methods=["POST"])
 def generate_response():
@@ -17,7 +17,7 @@ def generate_response():
     if not prompt:
         return jsonify({"error": "Prompt yo‘q"}), 400
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
